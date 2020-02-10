@@ -1,7 +1,8 @@
-package com.example.calculator;
+package com.example.calculatorCompany;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,8 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private String operator;
+    public static final String CALCULATION_RESULT = "calculatorCompany.RESULT";
+    private String operator = "+";
     private int value1 = 0;
     private int value2 = 0;
     private TextView resultTextView;
@@ -49,13 +50,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onEqualClicked(View view) {
-        // Save value2
-        value2 = Integer.parseInt((String) resultTextView.getText());
+
+        try {
+            // Save value2
+            value2 = Integer.parseInt((String) resultTextView.getText());
+        } catch (NumberFormatException e) {
+            value2 = 0;
+        }
+
         int result = 0;
 
         switch (operator) {
             case "+":
                 result = value1 + value2;
+                Log.d("MyApp", "my custom message");
                 break;
             case "-":
                 result = value1 - value2;
@@ -77,5 +85,15 @@ public class MainActivity extends AppCompatActivity {
         }
         // Show result
         resultTextView.setText(Integer.toString(result));
+
+        // Go to the next page
+        showResultPage();
+    }
+
+    private void showResultPage() {
+        Intent resultPageIntent = new Intent(this, ResultPage.class);
+        String result = resultTextView.getText().toString();
+        resultPageIntent.putExtra(CALCULATION_RESULT, result);
+        startActivity(resultPageIntent);
     }
 }
