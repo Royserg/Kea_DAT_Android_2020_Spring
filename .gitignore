@@ -1,0 +1,12 @@
+.idea
+*/app/src/androidTest
+gradle
+gradlew
+gradlew.bat
+settings.gradle
+build.gradle
+gradle.properties
+*/app/src/test
+*/app/.gitignore
+*/.gitignore
+proguard-rules.pro
