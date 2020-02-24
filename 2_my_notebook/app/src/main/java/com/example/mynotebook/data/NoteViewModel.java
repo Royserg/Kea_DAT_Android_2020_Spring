@@ -40,6 +40,14 @@ public class NoteViewModel extends ViewModel {
         notes.setValue(clonedNotes);
     }
 
+    public void delete(Note note) {
+        List<Note> savedNotes = notes.getValue();
+
+        List<Note> clonedNotes = new ArrayList<>(savedNotes);
+        clonedNotes.remove(note);
+
+        notes.setValue(clonedNotes);
+    }
 
     /**
      * Load dummy data to the notes LiveData list
