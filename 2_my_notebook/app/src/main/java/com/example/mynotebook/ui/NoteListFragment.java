@@ -4,9 +4,9 @@ package com.example.mynotebook.ui;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,11 +16,16 @@ import android.view.ViewGroup;
 
 import com.example.mynotebook.R;
 import com.example.mynotebook.data.NoteViewModel;
+import com.example.mynotebook.databinding.FragmentNoteListBinding;
+import com.example.mynotebook.models.Note;
 
 
 public class NoteListFragment extends Fragment {
 
+    private FragmentNoteListBinding binding;
+
     private RecyclerView recyclerView;
+
     private NotesAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private NoteViewModel viewModel;
@@ -28,16 +33,16 @@ public class NoteListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_note_list, container, false);
 
-        recyclerView = v.findViewById(R.id.note_list_recycler_view);
-        layoutManager = new LinearLayoutManager(getContext());
-        adapter = new NotesAdapter();
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_note_list, container, false);
+        View v = binding.getRoot();
 
+        recyclerView = binding.noteListRecyclerView;
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
 
+        adapter = new NotesAdapter(getActivity());
+        recyclerView.setAdapter(adapter);
         return v;
     }
 
@@ -48,6 +53,4 @@ public class NoteListFragment extends Fragment {
         viewModel = ViewModelProviders.of(getActivity()).get(NoteViewModel.class);
         viewModel.getNotes().observe(getViewLifecycleOwner(), notes -> adapter.setNotes(notes));
     }
-
-
 }

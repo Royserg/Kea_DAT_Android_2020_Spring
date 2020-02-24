@@ -1,56 +1,71 @@
 package com.example.mynotebook.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.mynotebook.R;
 import com.example.mynotebook.data.NoteViewModel;
+import com.example.mynotebook.databinding.FragmentAddEditNoteBinding;
+import com.example.mynotebook.models.Note;
 
 public class AddEditNoteFragment extends Fragment {
 
-//    public static final String EXTRA_ID = "com.example.mynotebook.ui.EXTRA_ID";
-//    public static final String EXTRA_TITLE = "com.example.mynotebook.ui.EXTRA_TITLE";
-//    public static final String EXTRA_CONTENT = "com.example.mynotebook.ui.EXTRA_CONTENT";
-//    public static final String EXTRA_POSITION = "com.example.mynotebook.ui.EXTRA_POSITION";
-
-    private EditText editTextTitle;
-    private EditText editTextContent;
+    FragmentAddEditNoteBinding binding;
     private NoteViewModel viewModel;
 
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_add_edit_note, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_edit_note, container, false);
+        binding.setNote(new Note("", ""));
+        View v = binding.getRoot();
+
         setHasOptionsMenu(true);
+
+        // TODO: find a way to change the title before hand
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Add Note");
         return v;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveNote();
+    }
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        MenuItem item = menu.findItem(R.id.addEditNoteFragment);
-        if (item != null) {
-            item.setVisible(false);
+        MenuItem addIcon = menu.findItem(R.id.addEditNoteFragment);
+        MenuItem saveIcon = menu.findItem(R.id.save_note);
+        if (addIcon != null) {
+            addIcon.setVisible(false);
         }
+        if (saveIcon != null) {
+            saveIcon.setVisible(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.save_note) {
+            // Close Fragment
+            getParentFragmentManager().popBackStackImmediate();
+        }
+        return true;
     }
 
     @Override
@@ -61,22 +76,17 @@ public class AddEditNoteFragment extends Fragment {
     }
 
     private void saveNote() {
-        String title = editTextTitle.getText().toString();
-        String content = editTextContent.getText().toString();
+        String title = binding.editTextTitle.getText().toString();
+        String content = binding.editTextContent.getText().toString();
+
 
         if (title.trim().isEmpty() || content.trim().isEmpty()) {
             Toast.makeText(getContext(), "Please insert title and content", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Intent data = new Intent();
+        Note note = new Note(title, content);
 
-
-//        int id = getIntent().getIntExtra(EXTRA_ID, -1);
-//        if (id != -1) {
-//            data.putExtra(EXTRA_POSITION, getIntent().getIntExtra(EXTRA_POSITION, -1));
-//            data.putExtra(EXTRA_ID, id);
-//        }
+        viewModel.insert(note);
     }
-
 }

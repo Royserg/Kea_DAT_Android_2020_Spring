@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/rounded_corner"
-    android:padding="12dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:elevation="2dp"
-    android:id="@+id/note_row"
-    >
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+>
+    <data>
+        <variable
+            name="note"
+            type="com.example.mynotebook.models.Note" />
+        <variable
+            name="noteClickListener"
+            type="com.example.mynotebook.ui.NoteClickListener" />
 
-    <TextView
-        android:id="@+id/note_row_text"
-        android:textSize="@dimen/note_row_title"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
+    </data>
+    <LinearLayout
+        android:id="@+id/note_row"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_corner"
+        android:padding="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:elevation="2dp"
+        android:onClick="@{() -> noteClickListener.noteClicked(note)}"
+        >
 
-    <ImageButton
-        android:id="@+id/note_row_delete_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/ic_delete" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/note_row_text"
+            android:textSize="@dimen/note_row_title"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@{note.title}" />
+
+        <ImageButton
+            android:id="@+id/note_row_delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:onClick="@{() -> noteClickListener.deleteNote(note)}"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/ic_delete" />
+    </LinearLayout>
+</layout>
