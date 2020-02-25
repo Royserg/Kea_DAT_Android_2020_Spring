@@ -11,11 +11,21 @@
         tools:layout="@layout/fragment_note_list" >
         <action
             android:id="@+id/navigate_to_add_edit_note"
-            app:destination="@id/addEditNoteFragment" />
+            app:destination="@id/addEditNoteFragment" >
+            <argument
+                android:name="id"
+                app:argType="integer"
+                android:defaultValue="99"
+                />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/addEditNoteFragment"
         android:name="com.example.mynotebook.ui.AddEditNoteFragment"
         android:label="Add/Edit Note"
-        tools:layout="@layout/fragment_add_edit_note" />
+        tools:layout="@layout/fragment_add_edit_note" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

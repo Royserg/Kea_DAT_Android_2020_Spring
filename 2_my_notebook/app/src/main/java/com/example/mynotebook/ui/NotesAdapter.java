@@ -8,35 +8,38 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.arch.core.util.Function;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mynotebook.R;
-import com.example.mynotebook.data.NoteViewModel;
 import com.example.mynotebook.databinding.NoteRowBinding;
 import com.example.mynotebook.models.Note;
-import java.util.ArrayList;
+
 import java.util.List;
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> implements NoteClickListener {
-
-    public Function<Note, Void> onDelete;
-    public List<Note> notes = new ArrayList<>();
+public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NoteViewHolder> implements NoteClickListener {
+    private NoteCallback callback;
     private Context context;
 
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
-        notifyDataSetChanged();
+    public NotesAdapter(Context context, NoteCallback callback) {
+        super(DIFF_CALLBACK);
+        this.context = context;
+        this.callback = callback;
     }
 
-    public NotesAdapter(Context context) {
-//        this.onDelete = onDelete;
-        this.context = context;
-//        ViewModelProviders.of(getActivity()).get(NoteViewModel.class);
-//        ViewModel viewModel = ViewModelProviders.of(context).get(NoteViewModel.class);
-    }
+    private static final DiffUtil.ItemCallback<Note> DIFF_CALLBACK = new DiffUtil.ItemCallback<Note>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Note oldItem, @NonNull Note newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Note oldItem, @NonNull Note newItem) {
+            return oldItem.title.equals(newItem.title) &&
+                    oldItem.content.equals(newItem.content);
+        }
+    };
 
     /* 3 methods to override from ViewHolder */
     @NonNull
@@ -51,31 +54,29 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-        Note current = notes.get(position);
+        Note current = getItem(position);
         holder.bind(current);
         holder.binding.setNoteClickListener(this);
     }
 
-    @Override
-    public int getItemCount() {
-        return notes.size();
+    /* Callback interface */
+    public interface NoteCallback{
+        void onDeletePressed(Note note);
+        void onNotePressed(int id);
     }
 
     /* Behavior when note row is clicked */
     @Override
     public void noteClicked(Note note) {
-        Log.i("MyApp", "Note Clicked!!!");
-        Toast.makeText(context, note.title + " clicked", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, note.title + " clicked", Toast.LENGTH_SHORT).show();
+        callback.onNotePressed(note.id);
     }
 
+    /* When trash button clicked */
     @Override
     public void deleteNote(Note note) {
-        int index = notes.indexOf(note);
-        notes.remove(note);
-        notifyItemRemoved(index);
-        notifyItemRangeChanged(index, notes.size());
+        callback.onDeletePressed(note);
     }
-
 
     /* === ViewHolder === */
     class NoteViewHolder extends RecyclerView.ViewHolder {

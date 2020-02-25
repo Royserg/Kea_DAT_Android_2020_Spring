@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -24,21 +23,12 @@ public class MainActivity extends AppCompatActivity {
     AppBarConfiguration appBarConfiguration;
 
     private NavController navController;
-//    NoteViewModel viewModel;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-//        NavHostFragment navHostFragment = supportFragmentManager.findFragmentById(R.id.main_content);
-//        val navController = navHostFragment.navController
-
-
-//        navController = Navigation.findNavController(this, R.id.main_content);
 
     }
 
@@ -62,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // TODO: this shows null reference error
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;

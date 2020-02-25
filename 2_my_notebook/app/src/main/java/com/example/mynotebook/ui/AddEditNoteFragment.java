@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.mynotebook.R;
 import com.example.mynotebook.data.NoteViewModel;
@@ -22,6 +24,7 @@ import com.example.mynotebook.models.Note;
 
 public class AddEditNoteFragment extends Fragment {
 
+    private int noteId;
     FragmentAddEditNoteBinding binding;
     private NoteViewModel viewModel;
 
@@ -31,12 +34,11 @@ public class AddEditNoteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_edit_note, container, false);
-        binding.setNote(new Note("", ""));
         View v = binding.getRoot();
 
         setHasOptionsMenu(true);
 
-        // TODO: find a way to change the title before hand
+    // TODO: find a way to change the title before hand
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Add Note");
         return v;
     }
@@ -63,9 +65,9 @@ public class AddEditNoteFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.save_note) {
             // Close Fragment
-            getParentFragmentManager().popBackStackImmediate();
+            Navigation.findNavController(getActivity(), R.id.main_content).navigateUp();
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -73,20 +75,29 @@ public class AddEditNoteFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(getActivity()).get(NoteViewModel.class);
         // Set note to the fields if exists
+        noteId = getArguments().getInt(NoteListFragment.NOTE_ID_KEY, -1);
+        if (noteId != -1) {
+            Note noteToUpdate = viewModel.getNote(noteId);
+            binding.setNote(noteToUpdate);
+        } else {
+            binding.setNote(new Note("", ""));
+        }
     }
 
     private void saveNote() {
         String title = binding.editTextTitle.getText().toString();
         String content = binding.editTextContent.getText().toString();
-
-
         if (title.trim().isEmpty() || content.trim().isEmpty()) {
-            Toast.makeText(getContext(), "Please insert title and content", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Note note = new Note(title, content);
 
+        if (noteId != -1) {
+            note.setId(noteId);
+            viewModel.update(note);
+            return;
+        }
         viewModel.insert(note);
     }
 }
