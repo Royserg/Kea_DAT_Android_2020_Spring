@@ -31,6 +31,8 @@ import java.util.List;
 
 public class NoteListFragment extends Fragment implements NotesAdapter.NoteCallback {
     public static final String NOTE_ID_KEY = "com.example.mynotebook.ui.NOTE_ID_KEY";
+    public static final String NOTE_TITLE_KEY = "com.example.mynotebook.ui.NOTE_TITLE_KEY";
+    public static final String NOTE_CONTENT_KEY = "com.example.mynotebook.ui.NOTE_CONTENT_KEY";
 
     private FragmentNoteListBinding binding;
     private RecyclerView recyclerView;
@@ -66,14 +68,17 @@ public class NoteListFragment extends Fragment implements NotesAdapter.NoteCallb
     }
 
     @Override
-    public void onDeletePressed(Note note) {
-        viewModel.deleteOne(note);
+    public void onDeletePressed(String id) {
+        viewModel.deleteOne(id);
     }
 
     @Override
-    public void onNotePressed(int id) {
+    public void onNotePressed(Note note) {
         Bundle bundle = new Bundle();
-        bundle.putInt(NOTE_ID_KEY, id);
+        bundle.putString(NOTE_ID_KEY, note.id);
+        bundle.putString(NOTE_TITLE_KEY, note.title);
+        bundle.putString(NOTE_CONTENT_KEY, note.content);
+
         NavController navcontroller = Navigation.findNavController(getActivity(), R.id.main_content);
         navcontroller.navigate(R.id.addEditNoteFragment, bundle);
     }

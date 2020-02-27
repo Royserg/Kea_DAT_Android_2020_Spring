@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.example.mynotebook.R;
 import com.example.mynotebook.databinding.ActivityMainBinding;
+import com.example.mynotebook.repositories.NoteRepository;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
                 new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupWithNavController(toolbar, navController);
         setSupportActionBar(toolbar);
+
+//        NoteRepository.addRandomNote();
     }
 
     @Override

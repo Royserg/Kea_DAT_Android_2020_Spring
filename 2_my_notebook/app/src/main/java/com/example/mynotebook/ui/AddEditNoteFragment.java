@@ -1,13 +1,11 @@
 package com.example.mynotebook.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +13,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.mynotebook.R;
 import com.example.mynotebook.data.NoteViewModel;
@@ -24,7 +21,7 @@ import com.example.mynotebook.models.Note;
 
 public class AddEditNoteFragment extends Fragment {
 
-    private int noteId;
+    private String noteId;
     FragmentAddEditNoteBinding binding;
     private NoteViewModel viewModel;
 
@@ -37,9 +34,6 @@ public class AddEditNoteFragment extends Fragment {
         View v = binding.getRoot();
 
         setHasOptionsMenu(true);
-
-    // TODO: find a way to change the title before hand
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Add Note");
         return v;
     }
 
@@ -75,12 +69,16 @@ public class AddEditNoteFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(getActivity()).get(NoteViewModel.class);
         // Set note to the fields if exists
-        noteId = getArguments().getInt(NoteListFragment.NOTE_ID_KEY, -1);
-        if (noteId != -1) {
-            Note noteToUpdate = viewModel.getNote(noteId);
+        noteId = getArguments().getString(NoteListFragment.NOTE_ID_KEY, null);
+        String title = getArguments().getString(NoteListFragment.NOTE_TITLE_KEY, null);
+        String content = getArguments().getString(NoteListFragment.NOTE_CONTENT_KEY, null);
+
+        if (noteId != null) {
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("Edit Note");
+            Note noteToUpdate = new Note(noteId, title, content);
             binding.setNote(noteToUpdate);
         } else {
-            binding.setNote(new Note("", ""));
+            binding.setNote(new Note("", "", ""));
         }
     }
 
@@ -91,9 +89,9 @@ public class AddEditNoteFragment extends Fragment {
             return;
         }
 
-        Note note = new Note(title, content);
+        Note note = new Note("", title, content);
 
-        if (noteId != -1) {
+        if (noteId != null) {
             note.setId(noteId);
             viewModel.update(note);
             return;

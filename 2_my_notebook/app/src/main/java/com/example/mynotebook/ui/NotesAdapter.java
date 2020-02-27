@@ -1,11 +1,9 @@
 package com.example.mynotebook.ui;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -15,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mynotebook.R;
 import com.example.mynotebook.databinding.NoteRowBinding;
 import com.example.mynotebook.models.Note;
-
-import java.util.List;
 
 public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NoteViewHolder> implements NoteClickListener {
     private NoteCallback callback;
@@ -31,7 +27,7 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NoteViewHolder>
     private static final DiffUtil.ItemCallback<Note> DIFF_CALLBACK = new DiffUtil.ItemCallback<Note>() {
         @Override
         public boolean areItemsTheSame(@NonNull Note oldItem, @NonNull Note newItem) {
-            return oldItem.id == newItem.id;
+            return oldItem.id.equals(newItem.id);
         }
 
         @Override
@@ -61,21 +57,20 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NoteViewHolder>
 
     /* Callback interface */
     public interface NoteCallback{
-        void onDeletePressed(Note note);
-        void onNotePressed(int id);
+        void onDeletePressed(String id);
+        void onNotePressed(Note note);
     }
 
     /* Behavior when note row is clicked */
     @Override
     public void noteClicked(Note note) {
-//        Toast.makeText(context, note.title + " clicked", Toast.LENGTH_SHORT).show();
-        callback.onNotePressed(note.id);
+        callback.onNotePressed(note);
     }
 
     /* When trash button clicked */
     @Override
-    public void deleteNote(Note note) {
-        callback.onDeletePressed(note);
+    public void deleteNote(String id) {
+        callback.onDeletePressed(id);
     }
 
     /* === ViewHolder === */

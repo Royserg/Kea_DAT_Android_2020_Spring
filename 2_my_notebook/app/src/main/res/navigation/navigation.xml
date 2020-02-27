@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/addEditNoteFragment"
         android:name="com.example.mynotebook.ui.AddEditNoteFragment"
-        android:label="Add/Edit Note"
+        android:label="Add Note"
         tools:layout="@layout/fragment_add_edit_note" >
         <argument
             android:name="id"

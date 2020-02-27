@@ -19,8 +19,8 @@
         android:background="@drawable/rounded_corner"
         android:padding="12dp"
         android:layout_marginTop="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
@@ -40,7 +40,7 @@
             android:id="@+id/note_row_delete_btn"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:onClick="@{() -> noteClickListener.deleteNote(note)}"
+            android:onClick="@{() -> noteClickListener.deleteNote(note.id)}"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/ic_delete" />
     </LinearLayout>
