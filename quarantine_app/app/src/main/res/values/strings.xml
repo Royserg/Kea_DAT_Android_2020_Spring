@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">quarantine_app</string>
+    <string name="title_home">Home</string>
+    <string name="title_global">Global Covid Data</string>
+    <string name="title_countries">Countries</string>
+    <string name="loading">Loading...</string>
+    <string name="new_confirmed_cases">New Confirmed Cases:</string>
+    <string name="total_confirmed">Total Confirmed Cases:</string>
+    <string name="new_deaths">New Deaths:</string>
+    <string name="total_deaths">Total Deaths:</string>
+    <string name="new_recovered">New Recovered:</string>
+    <string name="total_recovered">Total Recovered:</string>
+</resources>
